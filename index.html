@@ -39,9 +39,11 @@
     }
 
     .buttons {
+      position: relative;
       display: flex;
       justify-content: center;
       gap: 15px;
+      height: 60px; /* space for the runaway button */
     }
 
     button {
@@ -50,14 +52,15 @@
       border-radius: 999px;
       border: none;
       cursor: pointer;
-      transition: transform 0.15s ease;
       user-select: none;
+      transition: transform 0.15s ease;
     }
 
     #yesBtn {
       background: #ff4d79;
       color: white;
       box-shadow: 0 8px 20px rgba(255, 77, 121, 0.4);
+      z-index: 1;
     }
 
     #yesBtn:hover {
@@ -70,8 +73,8 @@
       color: #b83260;
       border: 2px solid rgba(184, 50, 96, 0.3);
       left: 50%;
-      top: 70%;
-      transform: translate(-50%, -50%);
+      top: 50%;
+      transform: translate(60px, -50%); /* starts next to Yes */
     }
 
     .message {
@@ -90,14 +93,8 @@
     }
 
     @keyframes floatUp {
-      from {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-      to {
-        transform: translateY(-120vh) scale(1.8);
-        opacity: 0;
-      }
+      from { transform: translateY(0) scale(1); opacity: 1; }
+      to   { transform: translateY(-120vh) scale(1.8); opacity: 0; }
     }
   </style>
 </head>
@@ -107,31 +104,30 @@
     <h1>Will you be my Valentine? 💖</h1>
     <p>I have a very important question for you…</p>
 
-    <div class="buttons">
+    <div class="buttons" id="buttons">
       <button id="yesBtn">Yes 💕</button>
+      <button id="noBtn">No 🙃</button>
     </div>
-
-    <button id="noBtn">No 🙃</button>
 
     <div class="message" id="message"></div>
   </div>
 
   <script>
-    const card = document.getElementById("card");
+    const buttons = document.getElementById("buttons");
     const noBtn = document.getElementById("noBtn");
     const yesBtn = document.getElementById("yesBtn");
     const message = document.getElementById("message");
 
     function moveNoButton() {
       const padding = 10;
-      const cardRect = card.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
+      const box = buttons.getBoundingClientRect();
+      const btn = noBtn.getBoundingClientRect();
 
-      const maxX = cardRect.width - btnRect.width - padding * 2;
-      const maxY = cardRect.height - btnRect.height - padding * 2;
+      const maxX = box.width - btn.width - padding * 2;
+      const maxY = box.height - btn.height - padding * 2;
 
-      const x = padding + Math.random() * maxX;
-      const y = padding + Math.random() * maxY;
+      const x = padding + Math.random() * Math.max(0, maxX);
+      const y = padding + Math.random() * Math.max(0, maxY);
 
       noBtn.style.left = `${x}px`;
       noBtn.style.top = `${y}px`;
@@ -152,21 +148,18 @@
     });
 
     function launchHearts(count) {
-      const hearts = ["💖", "💘", "💕", "💗", "❤️", "💞"];
+      const hearts = ["💖","💘","💕","💗","❤️","💞"];
       for (let i = 0; i < count; i++) {
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.bottom = "-20px";
-        heart.style.animationDuration = (2 + Math.random() * 2) + "s";
-        document.body.appendChild(heart);
-
-        setTimeout(() => heart.remove(), 4000);
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        h.style.left = Math.random() * 100 + "vw";
+        h.style.bottom = "-20px";
+        h.style.animationDuration = (2 + Math.random() * 2) + "s";
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 4000);
       }
     }
-
-    window.addEventListener("load", moveNoButton);
   </script>
 </body>
 </html>
